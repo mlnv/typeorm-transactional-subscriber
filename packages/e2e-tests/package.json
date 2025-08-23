@@ -1,0 +1,26 @@
+{
+  "name": "e2e-tests",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "test": "jest"
+  },
+  "dependencies": {
+    "sample-application": "workspace:*",
+    "typeorm-transactional-subscriber": "workspace:*"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": ["**/src/**/*.test.ts", "**/src/**/*.spec.ts", "**/src/index.ts"]
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.3.0",
+    "jest": "^30.0.5",
+    "testcontainers": "^9.12.0",
+    "ts-jest": "^29.4.1"
+  }
+}

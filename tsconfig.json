@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/typeorm-transactional-subscriber" },
+    { "path": "./packages/sample-application" },
+    { "path": "./packages/e2e-tests" }
+  ]
+}

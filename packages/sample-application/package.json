@@ -1,0 +1,16 @@
+{
+  "name": "sample-application",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "typeorm-transactional-subscriber": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0"
+  }
+}
