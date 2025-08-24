@@ -131,4 +131,34 @@ describe("TransactionalSubscriber", () => {
     // Assert
     expect(eventLog).toEqual(["Company removed: Acme Corp"]);
   });
+
+  it("should only call afterInsertCommitted after outermost commit with nested transactions", async () => {
+    // Arrange
+    eventLog.length = 0;
+
+    // Act
+    await dataSource.manager.transaction(async (outerManager: any) => {
+      const person = new Person();
+      person.name = "Nested One";
+      await outerManager.save(person);
+      expect(eventLog).toHaveLength(0);
+
+      await outerManager.transaction(async (innerManager: any) => {
+        const company = new Company();
+        company.name = "Nested Co";
+        await innerManager.save(company);
+        // Still not committed, should not see any events
+        expect(eventLog).toHaveLength(0);
+      });
+
+      // Still not committed, should not see any events
+      expect(eventLog).toHaveLength(0);
+    });
+
+    // Assert
+    expect(eventLog).toEqual([
+      "Person inserted: Nested One",
+      "Company inserted: Nested Co",
+    ]);
+  });
 });
