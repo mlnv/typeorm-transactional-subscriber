@@ -22,6 +22,7 @@ async function startTestPostgresContainer() {
   return container;
 }
 
+
 describe("TransactionalSubscriber", () => {
   let container: StartedPostgreSqlContainer;
   let dataSource: DataSource;
@@ -56,7 +57,7 @@ describe("TransactionalSubscriber", () => {
     eventLog.length = 0;
   });
 
-  it("should call afterInsert only after transaction commit", async () => {
+  it("should call afterInsertCommitted only after transaction commit", async () => {
     // Arrange
     // (Setup is handled by beforeEach)
 
@@ -71,8 +72,6 @@ describe("TransactionalSubscriber", () => {
       await manager.save(company);
       expect(eventLog).toHaveLength(0);
     });
-    // Wait for afterTransactionCommit hooks to run
-    await new Promise((resolve) => setTimeout(resolve, 20));
 
     // Assert
     expect(eventLog).toEqual([
@@ -81,7 +80,7 @@ describe("TransactionalSubscriber", () => {
     ]);
   });
 
-  it("should not call afterInsert if transaction is rolled back", async () => {
+  it("should not call afterInsertCommitted if transaction is rolled back", async () => {
     // Arrange
     // (Setup is handled by beforeEach)
 
@@ -97,5 +96,44 @@ describe("TransactionalSubscriber", () => {
 
     // Assert
     expect(eventLog).toHaveLength(0);
+  });
+
+  it("should call afterUpdateCommitted only after transaction commit", async () => {
+    // Arrange
+    const person = new Person();
+    person.name = "Charlie";
+    await dataSource.manager.save(person);
+    eventLog.length = 0;
+
+    // Act
+    await dataSource.manager.transaction(async (manager: any) => {
+      person.name = "Charlie Updated";
+      await manager.save(person);
+      expect(eventLog).toHaveLength(0);
+    });
+
+    // Assert
+    expect(eventLog).toEqual([
+      "Person updated: Charlie Updated"
+    ]);
+  });
+
+  it("should call afterRemoveCommitted only after transaction commit", async () => {
+    // Arrange
+    const company = new Company();
+    company.name = "Acme Corp";
+    await dataSource.manager.save(company);
+    eventLog.length = 0;
+
+    // Act
+    await dataSource.manager.transaction(async (manager: any) => {
+      await manager.remove(company);
+      expect(eventLog).toHaveLength(0);
+    });
+
+    // Assert
+    expect(eventLog).toEqual([
+      "Company removed: Acme Corp"
+    ]);
   });
 });

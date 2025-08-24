@@ -21,4 +21,20 @@ export class EntityEventSubscriber extends TransactionalEntitySubscriberBase<any
       eventLog.push(`Company inserted: ${event.entity.name}`);
     }
   }
+
+  async afterUpdateCommitted(event: any) {
+    if (event.entity instanceof Person) {
+      eventLog.push(`Person updated: ${event.entity.name}`);
+    } else if (event.entity instanceof Company) {
+      eventLog.push(`Company updated: ${event.entity.name}`);
+    }
+  }
+
+  async afterRemoveCommitted(event: any) {
+    if (event.entity instanceof Person) {
+      eventLog.push(`Person removed: ${event.entity.name}`);
+    } else if (event.entity instanceof Company) {
+      eventLog.push(`Company removed: ${event.entity.name}`);
+    }
+  }
 }
