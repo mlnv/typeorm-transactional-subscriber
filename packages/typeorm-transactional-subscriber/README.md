@@ -1,6 +1,6 @@
 # typeorm-transactional-subscriber
 
-A base class for TypeORM subscribers that ensures afterInsert/afterUpdate/afterRemove hooks are only called after a successful transaction commit.
+A base class for TypeORM subscribers that adds afterInsertCommitted, afterUpdateCommitted, and afterRemoveCommitted hooks, ensuring side effects only run after a successful transaction commit (never on rollback or savepoint release).
 
 ## Why?
 
