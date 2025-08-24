@@ -10,8 +10,7 @@ import { eventLog } from "sample-application/src/EventLog";
 jest.setTimeout(10000);
 
 async function startTestPostgresContainer() {
-  const container = await new PostgreSqlContainer("postgres:15-alpine")
-    .start();
+  const container = await new PostgreSqlContainer("postgres:15-alpine").start();
 
   process.env.DB_HOST = container.getHost();
   process.env.DB_PORT = container.getPort().toString();
@@ -21,7 +20,6 @@ async function startTestPostgresContainer() {
 
   return container;
 }
-
 
 describe("TransactionalSubscriber", () => {
   let container: StartedPostgreSqlContainer;
@@ -53,7 +51,6 @@ describe("TransactionalSubscriber", () => {
   });
 
   beforeEach(() => {
-    console.log("Before each test");
     eventLog.length = 0;
   });
 
@@ -67,9 +64,11 @@ describe("TransactionalSubscriber", () => {
       person.name = "Alice";
       await manager.save(person);
       expect(eventLog).toHaveLength(0);
+
       const company = new Company();
       company.name = "Widgets Ltd.";
       await manager.save(company);
+
       expect(eventLog).toHaveLength(0);
     });
 
@@ -113,9 +112,7 @@ describe("TransactionalSubscriber", () => {
     });
 
     // Assert
-    expect(eventLog).toEqual([
-      "Person updated: Charlie Updated"
-    ]);
+    expect(eventLog).toEqual(["Person updated: Charlie Updated"]);
   });
 
   it("should call afterRemoveCommitted only after transaction commit", async () => {
@@ -132,8 +129,6 @@ describe("TransactionalSubscriber", () => {
     });
 
     // Assert
-    expect(eventLog).toEqual([
-      "Company removed: Acme Corp"
-    ]);
+    expect(eventLog).toEqual(["Company removed: Acme Corp"]);
   });
 });
