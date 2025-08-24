@@ -9,11 +9,11 @@ TypeORM's entity subscribers fire hooks (like afterInsert) even if the transacti
 ## Installation
 
 ```sh
-npm install @maxemev/typeorm-transactional-subscriber
+npm install typeorm-transactional-subscriber
 # or
-pnpm add @maxemev/typeorm-transactional-subscriber
+pnpm add typeorm-transactional-subscriber
 # or
-yarn add @maxemev/typeorm-transactional-subscriber
+yarn add typeorm-transactional-subscriber
 ```
 
 ## Usage
