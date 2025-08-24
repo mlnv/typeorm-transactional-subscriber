@@ -6,7 +6,9 @@
   "scripts": {
     "build": "tsc -b",
     "test": "jest",
-  "test-debug": "cross-env DEBUG=testcontainers* jest"
+    "test-debug": "cross-env DEBUG=testcontainers* jest",
+    "lint": "pnpm exec eslint .",
+    "lint:fix": "pnpm exec eslint --fix ."
   },
   "dependencies": {
     "sample-application": "workspace:*",

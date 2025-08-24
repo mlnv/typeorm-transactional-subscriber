@@ -8,7 +8,9 @@
   ],
   "scripts": {
     "build": "tsc -b",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "lint": "pnpm exec eslint .",
+    "lint:fix": "pnpm exec eslint --fix ."
   },
   "license": "MIT",
   "author": "Maksym Yemelianov",
