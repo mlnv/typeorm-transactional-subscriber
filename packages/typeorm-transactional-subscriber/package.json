@@ -3,11 +3,19 @@
   "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -b",
     "clean": "rimraf dist"
   },
   "license": "MIT",
-  "author": "Maksym Yemelianov"
+  "author": "Maksym Yemelianov",
+  "dependencies": {
+    "typeorm": "^0.3.26"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0"
+  }
 }

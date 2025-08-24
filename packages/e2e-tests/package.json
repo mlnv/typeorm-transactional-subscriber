@@ -5,20 +5,32 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -b",
-    "test": "jest"
+    "test": "jest",
+  "test-debug": "cross-env DEBUG=testcontainers* jest"
   },
   "dependencies": {
     "sample-application": "workspace:*",
+    "typeorm": "^0.3.26",
     "typeorm-transactional-subscriber": "workspace:*"
   },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "testMatch": ["**/src/**/*.test.ts", "**/src/**/*.spec.ts", "**/src/index.ts"]
+    "testMatch": [
+      "**/src/**/*.test.ts",
+      "**/src/**/*.spec.ts",
+      "**/src/**/*.e2e-spec.ts"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "./tsconfig.json"
+      }
+    }
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^24.3.0",
+    "cross-env": "^10.0.0",
     "jest": "^30.0.5",
     "testcontainers": "^9.12.0",
     "ts-jest": "^29.4.1"

@@ -5,8 +5,10 @@
     "target": "es2019",
     "strict": true,
     "esModuleInterop": true,
-  "composite": true,
-  "declaration": true
+    "composite": true,
+    "declaration": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": ["src/**/*"]
 }
