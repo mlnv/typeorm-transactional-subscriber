@@ -1,7 +1,7 @@
 {
   "name": "typeorm-transactional-subscriber",
   "description": "Adds afterInsertCommitted, afterUpdateCommitted, and afterRemoveCommitted hooks to TypeORM subscribers, ensuring side effects only run after a successful transaction commit (never on rollback or savepoint release).",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "repository": {
     "type": "git",
     "url": "https://github.com/mlnv/typeorm-transactional-subscriber.git"
