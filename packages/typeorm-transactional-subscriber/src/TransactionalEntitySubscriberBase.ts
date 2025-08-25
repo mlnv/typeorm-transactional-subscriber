@@ -21,7 +21,7 @@ import {
  * If not implemented, nothing happens.
  */
 export abstract class TransactionalEntitySubscriberBase<T = any>
-  implements EntitySubscriberInterface<T>
+implements EntitySubscriberInterface<T>
 {
   /**
    * TypeORM: Called after a transaction is started.
