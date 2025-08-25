@@ -13,10 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 
-## [0.1.3] - 2025-08-25
+## [0.1.4] - 2025-08-25
 
 ### Changed
 - Downgraded `typeorm` dependency to version 0.3.17 in the root `package.json`, `e2e-tests`, `sample-application`, and `typeorm-transactional-subscriber` packages.
+
+## [0.1.3] - 2025-08-24
+- Added nvmrc usage
+- Added repo url to the npm package
 
 
 ## [0.1.2] - 2025-08-24
