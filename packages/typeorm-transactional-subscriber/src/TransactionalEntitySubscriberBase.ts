@@ -82,6 +82,15 @@ implements EntitySubscriberInterface<T>
     }
   }
 
+  public async afterSoftRemove(event: any) {
+    if (event.queryRunner && event.queryRunner.isTransactionActive) {
+      const store = this.getOrCreateTxStore(event.queryRunner);
+      store.softRemoved.push(event);
+    } else if (typeof (this as any).afterSoftRemoveCommitted === "function") {
+      await (this as any).afterSoftRemoveCommitted(event);
+    }
+  }
+
   /**
    * Called after a transaction successfully commits.
    *
@@ -110,9 +119,15 @@ implements EntitySubscriberInterface<T>
             await (this as any).afterRemoveCommitted(removeEvent);
           }
         }
+        if (typeof (this as any).afterSoftRemoveCommitted === "function") {
+          for (const softRemoveEvent of store.softRemoved) {
+            await (this as any).afterSoftRemoveCommitted(softRemoveEvent);
+          }
+        }
         store.inserted = [];
         store.updated = [];
         store.removed = [];
+        store.softRemoved = [];
       }
     }
   }
@@ -133,6 +148,7 @@ implements EntitySubscriberInterface<T>
         store.inserted = [];
         store.updated = [];
         store.removed = [];
+        store.softRemoved = [];
       }
     }
   }
@@ -152,6 +168,7 @@ implements EntitySubscriberInterface<T>
         inserted: [],
         updated: [],
         removed: [],
+        softRemoved: [],
       };
     }
     return queryRunner._transactionalSubscriberStore;
