@@ -7,8 +7,6 @@ import { Person } from "sample-application/src/entities/Person";
 import { Company } from "sample-application/src/entities/Company";
 import { eventLog } from "sample-application/src/EventLog";
 
-jest.setTimeout(10000);
-
 async function startTestPostgresContainer() {
   const container = await new PostgreSqlContainer("postgres:15-alpine").start();
 
