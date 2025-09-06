@@ -169,6 +169,48 @@ describe("TransactionalSubscriber", () => {
     expect(eventLog).toEqual(["Company removed: Acme Corp"]);
   });
 
+  it("should call afterInsertCommitted right away if not in a transaction", async () => {
+    // Arrange
+    const person = new Person();
+    person.name = "Eve";
+    eventLog.length = 0;
+
+    // Act
+    await dataSource.manager.save(person);
+
+    // Assert
+    expect(eventLog).toEqual(["Person inserted: Eve"]);
+  });
+
+  it("should call afterUpdateCommitted right away if not in a transaction", async () => {
+    // Arrange
+    const person = new Person();
+    person.name = "Frank";
+    await dataSource.manager.save(person);
+    eventLog.length = 0;
+
+    // Act
+    person.name = "Frank Updated";
+    await dataSource.manager.save(person);
+
+    // Assert
+    expect(eventLog).toEqual(["Person updated: Frank Updated"]);
+  });
+
+  it("should call afterRemoveCommitted right away if not in a transaction", async () => {
+    // Arrange
+    const company = new Company();
+    company.name = "Quick Remove Ltd.";
+    await dataSource.manager.save(company);
+    eventLog.length = 0;
+
+    // Act
+    await dataSource.manager.remove(company);
+
+    // Assert
+    expect(eventLog).toEqual(["Company removed: Quick Remove Ltd."]);
+  });
+
   it("should call afterSoftRemoveCommitted right away if not in a transaction", async () => {
     // Arrange
     const person = new Person();
