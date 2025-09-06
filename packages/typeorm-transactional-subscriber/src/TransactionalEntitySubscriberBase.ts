@@ -16,6 +16,7 @@ import {
  *   - afterInsertCommitted(event)
  *   - afterUpdateCommitted(event)
  *   - afterRemoveCommitted(event)
+ *   - afterSoftRemoveCommitted(event)
  *
  * If a hook is implemented, it will be called after the transaction commits (or immediately if not in a transaction).
  * If not implemented, nothing happens.
