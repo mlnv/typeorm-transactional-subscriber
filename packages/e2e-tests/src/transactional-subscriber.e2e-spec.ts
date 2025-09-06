@@ -8,15 +8,24 @@ import { Company } from "sample-application/src/entities/Company";
 import { eventLog } from "sample-application/src/EventLog";
 
 async function startTestPostgresContainer() {
-  const container = await new PostgreSqlContainer("postgres:15-alpine").start();
+  try {
+    const container = await new PostgreSqlContainer(
+      "postgres:15-alpine"
+    ).start();
 
-  process.env.DB_HOST = container.getHost();
-  process.env.DB_PORT = container.getPort().toString();
-  process.env.DB_USER = container.getUsername();
-  process.env.DB_PASS = container.getPassword();
-  process.env.DB_NAME = container.getDatabase();
+    process.env.DB_HOST = container.getHost();
+    process.env.DB_PORT = container.getPort().toString();
+    process.env.DB_USER = container.getUsername();
+    process.env.DB_PASS = container.getPassword();
+    process.env.DB_NAME = container.getDatabase();
 
-  return container;
+    return container;
+  } catch (error) {
+    throw new Error(
+      "Failed to start PostgreSQL Docker container. Please ensure Docker is running and accessible.\n" +
+        (error instanceof Error ? error.message : String(error))
+    );
+  }
 }
 
 describe("TransactionalSubscriber", () => {
