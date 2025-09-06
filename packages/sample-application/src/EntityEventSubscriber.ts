@@ -1,6 +1,9 @@
 import {
   EventSubscriber,
   InsertEvent,
+  RemoveEvent,
+  SoftRemoveEvent,
+  UpdateEvent,
 } from "typeorm";
 import { Person } from "./entities/Person";
 import { Company } from "./entities/Company";
@@ -22,7 +25,7 @@ export class EntityEventSubscriber extends TransactionalEntitySubscriberBase<any
     }
   }
 
-  async afterUpdateCommitted(event: any) {
+  async afterUpdateCommitted(event: UpdateEvent<any>) {
     if (event.entity instanceof Person) {
       eventLog.push(`Person updated: ${event.entity.name}`);
     } else if (event.entity instanceof Company) {
@@ -30,7 +33,7 @@ export class EntityEventSubscriber extends TransactionalEntitySubscriberBase<any
     }
   }
 
-  async afterRemoveCommitted(event: any) {
+  async afterRemoveCommitted(event: RemoveEvent<any>) {
     if (event.entity instanceof Person) {
       eventLog.push(`Person removed: ${event.entity.name}`);
     } else if (event.entity instanceof Company) {
@@ -38,7 +41,7 @@ export class EntityEventSubscriber extends TransactionalEntitySubscriberBase<any
     }
   }
 
-  async afterSoftRemoveCommitted(event: any) {
+  async afterSoftRemoveCommitted(event: SoftRemoveEvent<any>) {
     if (event.entity instanceof Person) {
       eventLog.push(`Person soft removed: ${event.entity.name}`);
     } else if (event.entity instanceof Company) {
