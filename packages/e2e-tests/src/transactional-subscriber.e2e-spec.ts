@@ -122,23 +122,6 @@ describe("TransactionalSubscriber", () => {
     expect(eventLog).toEqual(["Person updated: Charlie Updated"]);
   });
 
-  it("should call afterRemoveCommitted only after transaction commit", async () => {
-    // Arrange
-    const company = new Company();
-    company.name = "Acme Corp";
-    await dataSource.manager.save(company);
-    eventLog.length = 0;
-
-    // Act
-    await dataSource.manager.transaction(async (manager: any) => {
-      await manager.remove(company);
-      expect(eventLog).toHaveLength(0);
-    });
-
-    // Assert
-    expect(eventLog).toEqual(["Company removed: Acme Corp"]);
-  });
-
   it("should only call afterInsertCommitted after outermost commit with nested transactions", async () => {
     // Arrange
     eventLog.length = 0;
@@ -167,5 +150,72 @@ describe("TransactionalSubscriber", () => {
       "Person inserted: Nested One",
       "Company inserted: Nested Co",
     ]);
+  });
+
+  it("should call afterRemoveCommitted only after transaction commit", async () => {
+    // Arrange
+    const company = new Company();
+    company.name = "Acme Corp";
+    await dataSource.manager.save(company);
+    eventLog.length = 0;
+
+    // Act
+    await dataSource.manager.transaction(async (manager: any) => {
+      await manager.remove(company);
+      expect(eventLog).toHaveLength(0);
+    });
+
+    // Assert
+    expect(eventLog).toEqual(["Company removed: Acme Corp"]);
+  });
+
+  it("should call afterSoftRemoveCommitted right away if not in a transaction", async () => {
+    // Arrange
+    const person = new Person();
+    person.name = "David";
+    await dataSource.manager.save(person);
+    eventLog.length = 0;
+
+    // Act
+    await dataSource.manager.softRemove(person);
+
+    // Assert
+    expect(eventLog).toEqual(["Person soft removed: David"]);
+  });
+
+  it("should call afterSoftRemoveCommitted only after transaction commit", async () => {
+    // Arrange
+    const person = new Person();
+    person.name = "David";
+    await dataSource.manager.save(person);
+    eventLog.length = 0;
+
+    // Act
+    await dataSource.manager.transaction(async (manager: any) => {
+      await manager.softRemove(person);
+      expect(eventLog).toHaveLength(0);
+    });
+
+    // Assert
+    expect(eventLog).toEqual(["Person soft removed: David"]);
+  });
+
+  it("should not call afterSoftRemoveCommitted if transaction is rolled back", async () => {
+    // Arrange
+    const company = new Company();
+    company.name = "Rollback Corp";
+    await dataSource.manager.save(company);
+    eventLog.length = 0;
+
+    // Act
+    await expect(
+      dataSource.manager.transaction(async (manager: any) => {
+        await manager.softRemove(company);
+        throw new Error("Force rollback");
+      })
+    ).rejects.toThrow("Force rollback");
+
+    // Assert
+    expect(eventLog).toHaveLength(0);
   });
 });

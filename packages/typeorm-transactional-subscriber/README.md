@@ -1,6 +1,6 @@
 # typeorm-transactional-subscriber
 
-A base class for TypeORM subscribers that adds afterInsertCommitted, afterUpdateCommitted, and afterRemoveCommitted hooks, ensuring side effects only run after a successful transaction commit (never on rollback or savepoint release).
+A base class for TypeORM subscribers that adds afterInsertCommitted, afterUpdateCommitted, afterRemoveCommitted, and afterSoftRemoveCommitted hooks, ensuring side effects only run after a successful transaction commit (never on rollback or savepoint release).
 
 ## Why?
 
@@ -25,6 +25,7 @@ import {
   InsertEvent,
   UpdateEvent,
   RemoveEvent,
+  SoftRemoveEvent,
 } from "typeorm";
 
 @EventSubscriber()
@@ -47,18 +48,23 @@ export class UserSubscriber extends TransactionalEntitySubscriberBase<User> {
     // Called after transaction commit or immediately if not in a transaction
     await cleanupUserData(event.entity.id);
   }
+
+  async afterSoftRemoveCommitted(event: SoftRemoveEvent<User>) {
+    // Called after transaction commit or immediately if not in a transaction
+    await logSoftRemove(event.entity.id);
+  }
 }
 ```
 
 ## How it works
 
-- During a transaction, afterInsert/afterUpdate/afterRemove events are queued per transaction.
+- During a transaction, afterInsert/afterUpdate/afterRemove/afterSoftRemove events are queued per transaction.
 - On commit, the queued events are replayed and your hooks are called.
 - On rollback, the queue is cleared and "\*Committed" hooks are NOT called.
 
 ### Nested Transactions (Savepoints) Support
 
-This package supports nested transactions (savepoints) out of the box. If you use TypeORM's nested transactions (e.g., by calling `manager.transaction()` inside another transaction), the subscriber will maintain a transaction depth counter per QueryRunner. Post-commit hooks (such as `afterInsertCommitted`, `afterUpdateCommitted`, `afterRemoveCommitted`) are only called after the **outermost** transaction is committed. Inner (nested) commits or rollbacks do not trigger post-commit hooks; only the final, outer commit does.
+This package supports nested transactions (savepoints) out of the box. If you use TypeORM's nested transactions (e.g., by calling `manager.transaction()` inside another transaction), the subscriber will maintain a transaction depth counter per QueryRunner. Post-commit hooks (such as `afterInsertCommitted`, `afterUpdateCommitted`, `afterRemoveCommitted`, `afterSoftRemoveCommitted`) are only called after the **outermost** transaction is committed. Inner (nested) commits or rollbacks do not trigger post-commit hooks; only the final, outer commit does.
 
 **Example:**
 

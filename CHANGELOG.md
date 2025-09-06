@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ### Added
+- `afterSoftRemoveCommitted` hook for post-commit logic after soft-remove operations.
 
 ### Changed
 

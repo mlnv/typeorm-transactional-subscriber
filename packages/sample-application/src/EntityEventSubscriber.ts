@@ -37,4 +37,12 @@ export class EntityEventSubscriber extends TransactionalEntitySubscriberBase<any
       eventLog.push(`Company removed: ${event.entity.name}`);
     }
   }
+
+  async afterSoftRemoveCommitted(event: any) {
+    if (event.entity instanceof Person) {
+      eventLog.push(`Person soft removed: ${event.entity.name}`);
+    } else if (event.entity instanceof Company) {
+      eventLog.push(`Company soft removed: ${event.entity.name}`);
+    }
+  }
 }
