@@ -7,17 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+
+### Changed
+
+
+## [0.2.0] - 2025-09-06
 
 ### Added
 - `afterSoftRemoveCommitted` hook for post-commit logic after soft-remove operations.
-
-### Changed
 
 
 ## [0.1.4] - 2025-08-25
 
 ### Changed
 - Downgraded `typeorm` dependency to version 0.3.17 in the root `package.json`, `e2e-tests`, `sample-application`, and `typeorm-transactional-subscriber` packages.
+
 
 ## [0.1.3] - 2025-08-24
 - Added nvmrc usage
